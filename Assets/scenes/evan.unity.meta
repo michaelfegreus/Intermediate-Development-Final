@@ -1,7 +1,12 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/scenes/evan.unity.meta
+guid: 3b1f882dab531e343ae3a7e2be1ffdd0
+timeCreated: 1478814336
+=======
 guid: 39477f5670b87425a9714167203bc0b5
 folderAsset: yes
 timeCreated: 1478814533
+>>>>>>> be8afd2ba1369ebd864fe225e0d72fd8dd7357a1:Assets/Scripts.meta
 licenseType: Free
 DefaultImporter:
   userData: 
