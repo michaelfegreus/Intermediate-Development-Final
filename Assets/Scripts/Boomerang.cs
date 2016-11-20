@@ -10,6 +10,7 @@ public class Boomerang : MonoBehaviour {
 	public bool applyForce;
 	public float throwSpeed;
 
+
 	// Use this for initialization
 	void Start () {
 		throwSpeed = 25f;
