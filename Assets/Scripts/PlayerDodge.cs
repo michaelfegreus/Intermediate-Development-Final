@@ -20,7 +20,7 @@ public class PlayerDodge : MonoBehaviour {
 
 	bool dodging = false;
 	float dodgeTimeLimit = .5f;
-	float dodgeTimer = dodgeTimeLimit;
+	float dodgeTimer;
 	/*float doubleTapLimit = .6f;
 	float doubleTapTimer = 0f;
 	string lastKey;
@@ -31,6 +31,7 @@ public class PlayerDodge : MonoBehaviour {
 		boomerangThrown = false;
 		applyForce = false;
 		rb = GetComponent<Rigidbody> ();
+		dodgeTimer = dodgeTimeLimit;
 	}
 
 	void FixedUpdate () {
@@ -43,9 +44,19 @@ public class PlayerDodge : MonoBehaviour {
 
 			//+ Physics.gravity; // always apply gravity
 		if (Input.GetKeyDown (KeyCode.LeftShift)) {
-			dodging = true;
+			if ((0 < dodgeTimer)&&(!dodging)) {
+				dodging = true;
+				moveSpeed = moveSpeed * 2;
+			}
 		}
-		if(dodgeTimer < dodgeTimeLimit * (-1f){
+		if (dodging) {
+			dodgeTimer = dodgeTimer - Time.deltaTime;
+
+		}
+		if (dodgeTimer <= 0) {
+			dodging = false;
+		}
+		if(dodgeTimer < dodgeTimeLimit * (-1f)){
 			dodgeTimer = dodgeTimeLimit;
 		}
 		/*
