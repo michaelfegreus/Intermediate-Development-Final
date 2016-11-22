@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Boomerang : MonoBehaviour {
+public class scr_boomerang: MonoBehaviour {
 
 	Rigidbody rbody;
 	public float timer = 0f;
@@ -16,7 +16,7 @@ public class Boomerang : MonoBehaviour {
 		throwSpeed = 25f;
 		timer = .75f;
 		rbody = GetComponent<Rigidbody>();
-		player = GameObject.Find ("Player");
+		player = GameObject.Find ("Player1");
 		applyForce = true;
 		//startPoint = new Vector3 (3.63f, 0.85f, 6.090801f);
 			
@@ -45,7 +45,7 @@ public class Boomerang : MonoBehaviour {
 
 	void OnTriggerEnter (Collider collision){
 		if (collision.gameObject.name == "Player" && timer <=0) {
-			player.GetComponent<Player> ().boomerangThrown = false;
+			player.GetComponent<scr_player> ().boomerangThrown = false;
 			Destroy (gameObject);
 		}
 
