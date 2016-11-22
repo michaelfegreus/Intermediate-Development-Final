@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class scr_player : MonoBehaviour {
 
@@ -66,10 +67,16 @@ public class scr_player : MonoBehaviour {
 
 	void Update(){
 
+
+		if (Input.GetKeyDown (KeyCode.G)) {
+			SceneManager.LoadScene (0);
+		}
+
+
 		if (((playerNumber == 1) && (Input.GetKeyDown (KeyCode.LeftShift))) || ((playerNumber == 2) && (Input.GetKeyDown (KeyCode.RightShift)))) {
 			if ((0 < dodgeTimer)&&(!dodging)) {
 				dodging = true;
-				currentMoveSpeed = baseMoveSpeed * 1.5;
+				currentMoveSpeed = baseMoveSpeed * 1.5f;
 			}
 		}
 		if ((dodging)||(dodgeTimer <= 0)) {
@@ -116,7 +123,7 @@ public class scr_player : MonoBehaviour {
 		if (Input.GetKeyUp (myBButtonRight) && boomerangThrown == false) {
 			applyForce = true;
 			GameObject boomerang = (GameObject)Instantiate (boomerangPrefab, spawner.transform.position, Quaternion.identity);
-
+			boomerang.GetComponent<scr_boomerang> ().player = gameObject;
 			boomerangThrown = true;
 
 		}
