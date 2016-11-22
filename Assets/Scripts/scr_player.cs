@@ -2,9 +2,12 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour {
+public class scr_player : MonoBehaviour {
 
-	public float moveSpeed;
+	public int playerNumber;
+
+	public float baseMoveSpeed;
+	float currentMoveSpeed;
 	public float turnSpeed;
 	public float throwSpeed;
 	public bool boomerangThrown;
@@ -40,11 +43,22 @@ public class Player : MonoBehaviour {
 	public bool facingSouthEast;
 	public bool facingSouthWest;
 
+	bool dodging = false;
+	float dodgeTimeLimit = .5f;
+	float dodgeTimer;
+
 	void Start () {
 		cController = GetComponent<CharacterController>();
 		boomerangThrown = false;
 		applyForce = false;
-
+		currentMoveSpeed = baseMoveSpeed;
+		dodgeTimer = dodgeTimeLimit;
+		if (playerNumber == 1) {
+			gameObject.name = "Player1";
+		}
+		if (playerNumber == 2) {
+			gameObject.name = "Player2";
+		}
 	}
 
 	void FixedUpdate () {
@@ -59,6 +73,22 @@ public class Player : MonoBehaviour {
 		}
 
 
+		if (((playerNumber == 1) && (Input.GetKeyDown (KeyCode.LeftShift))) || ((playerNumber == 2) && (Input.GetKeyDown (KeyCode.RightShift)))) {
+			if ((0 < dodgeTimer)&&(!dodging)) {
+				dodging = true;
+				currentMoveSpeed = baseMoveSpeed * 1.5f;
+			}
+		}
+		if ((dodging)||(dodgeTimer <= 0)) {
+			dodgeTimer = dodgeTimer - Time.deltaTime;
+		}
+		if (dodgeTimer <= 0) {
+			dodging = false;
+			currentMoveSpeed = baseMoveSpeed;
+		}
+		if(dodgeTimer < (dodgeTimeLimit * (-1f))){
+			dodgeTimer = dodgeTimeLimit;
+		}
 		//returnPos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
 
 		//float inputX = Input.GetAxis (myHorizontalAxis); // A/D, LeftArrow/RightArrow
@@ -73,19 +103,19 @@ public class Player : MonoBehaviour {
 		//transform.Rotate (0f, inputX * turnSpeed, 0f);
 
 		if (Input.GetKey (myMoveUp)) {
-			transform.position += Vector3.forward * Time.deltaTime * moveSpeed;
+			transform.position += Vector3.forward * Time.deltaTime * currentMoveSpeed;
 		}
 
 		if (Input.GetKey (myMoveDown)) {
-			transform.position += Vector3.back * Time.deltaTime * moveSpeed;
+			transform.position += Vector3.back * Time.deltaTime * currentMoveSpeed;
 		}
 
 		if (Input.GetKey (myMoveLeft)) {
-			transform.position += Vector3.left * Time.deltaTime * moveSpeed;
+			transform.position += Vector3.left * Time.deltaTime * currentMoveSpeed;
 		}
 
 		if (Input.GetKey (myMoveRight)) {
-			transform.position += Vector3.right * Time.deltaTime * moveSpeed;
+			transform.position += Vector3.right * Time.deltaTime * currentMoveSpeed;
 		}
 
 
@@ -93,7 +123,7 @@ public class Player : MonoBehaviour {
 		if (Input.GetKeyUp (myBButtonRight) && boomerangThrown == false) {
 			applyForce = true;
 			GameObject boomerang = (GameObject)Instantiate (boomerangPrefab, spawner.transform.position, Quaternion.identity);
-			boomerang.GetComponent<Boomerang> ().player = gameObject;
+			boomerang.GetComponent<scr_boomerang> ().player = gameObject;
 			boomerangThrown = true;
 
 		}
