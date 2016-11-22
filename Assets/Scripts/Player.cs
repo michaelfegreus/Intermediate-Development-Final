@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
@@ -52,6 +53,12 @@ public class Player : MonoBehaviour {
 
 	void Update(){
 
+
+		if (Input.GetKeyDown (KeyCode.G)) {
+			SceneManager.LoadScene (0);
+		}
+
+
 		//returnPos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
 
 		//float inputX = Input.GetAxis (myHorizontalAxis); // A/D, LeftArrow/RightArrow
@@ -86,7 +93,7 @@ public class Player : MonoBehaviour {
 		if (Input.GetKeyUp (myBButtonRight) && boomerangThrown == false) {
 			applyForce = true;
 			GameObject boomerang = (GameObject)Instantiate (boomerangPrefab, spawner.transform.position, Quaternion.identity);
-
+			boomerang.GetComponent<Boomerang> ().player = gameObject;
 			boomerangThrown = true;
 
 		}

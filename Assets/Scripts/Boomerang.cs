@@ -9,6 +9,7 @@ public class Boomerang : MonoBehaviour {
 	public Vector3 startPoint;
 	public bool applyForce;
 	public float throwSpeed;
+	public GameObject otherPlayer;
 
 
 	// Use this for initialization
@@ -16,7 +17,7 @@ public class Boomerang : MonoBehaviour {
 		throwSpeed = 25f;
 		timer = .75f;
 		rbody = GetComponent<Rigidbody>();
-		player = GameObject.Find ("Player");
+		//player = GameObject.Find ("Player");
 		applyForce = true;
 		//startPoint = new Vector3 (3.63f, 0.85f, 6.090801f);
 			
@@ -44,10 +45,16 @@ public class Boomerang : MonoBehaviour {
 	}
 
 	void OnTriggerEnter (Collider collision){
-		if (collision.gameObject.name == "Player" && timer <=0) {
+		if (collision.gameObject == player && timer <= 0) {
 			player.GetComponent<Player> ().boomerangThrown = false;
 			Destroy (gameObject);
+		} else if (collision.tag == "Boomerang") {
+			Debug.Log ("Hit boomerang of opponent");
+		} else if ( collision.tag != player.tag && (collision.tag == "PlayerOne" || collision.tag == "PlayerTwo") ) {
+			Destroy (collision.gameObject);
 		}
 
+
+	
 	}
 }
