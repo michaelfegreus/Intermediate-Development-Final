@@ -16,6 +16,7 @@ public class scr_player : MonoBehaviour {
 	//Vector3 returnPos;
 
 	CharacterController cController;
+	Rigidbody rb;
 	public GameObject boomerangPrefab;
 	public bool applyForce;
 	public GameObject spawner;
@@ -49,6 +50,7 @@ public class scr_player : MonoBehaviour {
 
 	void Start () {
 		cController = GetComponent<CharacterController>();
+		rb = GetComponent<Rigidbody>();
 		boomerangThrown = false;
 		applyForce = false;
 		currentMoveSpeed = baseMoveSpeed;
@@ -103,19 +105,25 @@ public class scr_player : MonoBehaviour {
 		//transform.Rotate (0f, inputX * turnSpeed, 0f);
 
 		if (Input.GetKey (myMoveUp)) {
-			transform.position += Vector3.forward * Time.deltaTime * currentMoveSpeed;
+			rb.AddForce(transform.position += Vector3.forward * Time.deltaTime * currentMoveSpeed);
 		}
 
 		if (Input.GetKey (myMoveDown)) {
-			transform.position += Vector3.back * Time.deltaTime * currentMoveSpeed;
+			rb.AddForce(transform.position += Vector3.back * Time.deltaTime * currentMoveSpeed);
+
+			//transform.position += Vector3.back * Time.deltaTime * currentMoveSpeed;
 		}
 
 		if (Input.GetKey (myMoveLeft)) {
-			transform.position += Vector3.left * Time.deltaTime * currentMoveSpeed;
+			rb.AddForce(transform.position += Vector3.left * Time.deltaTime * currentMoveSpeed);
+
+			//transform.position += Vector3.left * Time.deltaTime * currentMoveSpeed;
 		}
 
 		if (Input.GetKey (myMoveRight)) {
-			transform.position += Vector3.right * Time.deltaTime * currentMoveSpeed;
+			rb.AddForce(transform.position += Vector3.right * Time.deltaTime * currentMoveSpeed);
+
+			//transform.position += Vector3.right * Time.deltaTime * currentMoveSpeed;
 		}
 
 
