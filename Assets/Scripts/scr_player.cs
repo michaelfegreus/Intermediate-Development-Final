@@ -6,16 +6,16 @@ public class scr_player : MonoBehaviour {
 
 	public int playerNumber;
 
+	Rigidbody rb;
+
 	public float baseMoveSpeed;
 	float currentMoveSpeed;
+	public float halfMoveSpeed;
 	public float turnSpeed;
 	public float throwSpeed;
+	public float charge;
 	public bool boomerangThrown;
-	//private float timer = 0f;
 
-	//Vector3 returnPos;
-
-	CharacterController cController;
 	public GameObject boomerangPrefab;
 	public bool applyForce;
 	public GameObject spawner;
@@ -27,6 +27,9 @@ public class scr_player : MonoBehaviour {
 	public KeyCode myBButtonRight;
 	public KeyCode myBButtonLeft;
 
+	//Key for dodging
+	public KeyCode myDodgeButton;
+
 	//Keys for character movement to determine the direction the player is facing
 	public KeyCode myMoveUp;
 	public KeyCode myMoveDown;
@@ -34,21 +37,21 @@ public class scr_player : MonoBehaviour {
 	public KeyCode myMoveRight;
 
 	//Bools for deteriming the direction the player is facing
-	public bool facingNorth;
-	public bool facingEast;
-	public bool facingSouth;
-	public bool facingWest;
-	public bool facingNorthEast;
-	public bool facingNorthWest;
-	public bool facingSouthEast;
-	public bool facingSouthWest;
+	bool facingNorth;
+	bool facingEast;
+	bool facingSouth;
+	bool facingWest;
+	bool facingNorthEast;
+	bool facingNorthWest;
+	bool facingSouthEast;
+	bool facingSouthWest;
 
-	bool dodging = false;
+	public bool dodging = false;
 	float dodgeTimeLimit = .5f;
 	float dodgeTimer;
 
 	void Start () {
-		cController = GetComponent<CharacterController>();
+		rb = GetComponent<Rigidbody> ();
 		boomerangThrown = false;
 		applyForce = false;
 		currentMoveSpeed = baseMoveSpeed;
@@ -61,22 +64,19 @@ public class scr_player : MonoBehaviour {
 		}
 	}
 
-	void FixedUpdate () {
-
-	}
-
-	void Update(){
-
-
+	void Update () {
 		if (Input.GetKeyDown (KeyCode.G)) {
 			SceneManager.LoadScene (0);
 		}
+	}
 
-
+	void FixedUpdate(){
 		if (((playerNumber == 1) && (Input.GetKeyDown (KeyCode.LeftShift))) || ((playerNumber == 2) && (Input.GetKeyDown (KeyCode.RightShift)))) {
 			if ((0 < dodgeTimer)&&(!dodging)) {
 				dodging = true;
-				currentMoveSpeed = baseMoveSpeed * 1.5f;
+				rb.velocity = Vector3.zero;
+				rb.AddForce(Vector3.right);
+
 			}
 		}
 		if ((dodging)||(dodgeTimer <= 0)) {
@@ -84,24 +84,11 @@ public class scr_player : MonoBehaviour {
 		}
 		if (dodgeTimer <= 0) {
 			dodging = false;
-			currentMoveSpeed = baseMoveSpeed;
+			rb.velocity = Vector3.zero;
 		}
 		if(dodgeTimer < (dodgeTimeLimit * (-1f))){
 			dodgeTimer = dodgeTimeLimit;
 		}
-		//returnPos = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
-
-		//float inputX = Input.GetAxis (myHorizontalAxis); // A/D, LeftArrow/RightArrow
-		//float inputY = Input.GetAxis (myVerticalAxis); // W/S, UpArrow/DownArrow
-
-		//Up/Down Movement
-		//cController.SimpleMove (transform.forward * inputY * moveSpeed);
-		//Left/Right Movement
-		//cController.SimpleMove (transform.right * inputX * moveSpeed);
-
-		//tank movement
-		//transform.Rotate (0f, inputX * turnSpeed, 0f);
-
 		if (Input.GetKey (myMoveUp)) {
 			transform.position += Vector3.forward * Time.deltaTime * currentMoveSpeed;
 		}
@@ -118,12 +105,16 @@ public class scr_player : MonoBehaviour {
 			transform.position += Vector3.right * Time.deltaTime * currentMoveSpeed;
 		}
 
-
+		if (Input.GetKey (myBButtonRight) && boomerangThrown == false && charge < 12) {
+			charge += 4 * Time.deltaTime;
+			Debug.Log (charge);
+		}
 		//throws the boomerang to the right - currently only goes forward
 		if (Input.GetKeyUp (myBButtonRight) && boomerangThrown == false) {
 			applyForce = true;
 			GameObject boomerang = (GameObject)Instantiate (boomerangPrefab, spawner.transform.position, Quaternion.identity);
 			boomerang.GetComponent<scr_boomerang> ().player = gameObject;
+			boomerang.GetComponent<scr_boomerang> ().throwSpeed = 7f + charge;
 			boomerangThrown = true;
 
 		}
@@ -192,40 +183,80 @@ public class scr_player : MonoBehaviour {
 			facingSouthWest = false;
 		}
 
+
 		//changing the direction the player is facing
 
 		if (facingNorth == true) {
 			//transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
 			transform.eulerAngles = new Vector3 (0, 0);
+			//currentMoveSpeed = baseMoveSpeed;
 		}
 
 		if (facingEast == true) {
 			transform.eulerAngles = new Vector3 (0, 90);
+			//currentMoveSpeed = baseMoveSpeed;
 		}
 
 		if (facingSouth == true) {
 			transform.eulerAngles = new Vector3 (0, 180);
+			//currentMoveSpeed = baseMoveSpeed;
 		}
 
 		if (facingWest == true) {
 			transform.eulerAngles = new Vector3 (0, 270);
+			//currentMoveSpeed = baseMoveSpeed;
 		}
 
 		if (facingNorthEast == true) {
+			rb.velocity = new Vector3 (currentMoveSpeed, 0f, currentMoveSpeed);
+
 			transform.eulerAngles = new Vector3 (0, 45);
+			//currentMoveSpeed = currentMoveSpeed /2f;
+			//currentMoveSpeed = halfMoveSpeed;
 		}
 
 		if (facingNorthWest == true) {
+			rb.velocity = new Vector3 (-(currentMoveSpeed), 0f, currentMoveSpeed);
+
 			transform.eulerAngles = new Vector3 (0, 315);
+			//currentMoveSpeed = currentMoveSpeed / 2f;
+			//currentMoveSpeed = halfMoveSpeed;
 		}
 
 		if (facingSouthEast == true) {
+			rb.velocity = new Vector3 (currentMoveSpeed, 0f, -(currentMoveSpeed));
+
 			transform.eulerAngles = new Vector3 (0, 135);
+			//currentMoveSpeed = currentMoveSpeed / 2f;
+			//currentMoveSpeed = halfMoveSpeed;
 		}
 
 		if (facingSouthWest == true) {
+			rb.velocity = new Vector3 (-(currentMoveSpeed), 0f, -(currentMoveSpeed));
+
 			transform.eulerAngles = new Vector3 (0, 225);
+			//currentMoveSpeed = currentMoveSpeed / 2f;
+			//currentMoveSpeed = halfMoveSpeed;
+		}
+
+
+		if (facingNorthEast == true || facingNorthWest == true || facingSouthEast == true || facingSouthWest == true) {
+
+			currentMoveSpeed = halfMoveSpeed;
+
+		} else {
+			currentMoveSpeed = baseMoveSpeed;
 		}
 
 	}
+	/*IEnumerator doubleTapCoroutine(){
+		Debug.Log ("The coroutine started!");
+		yield return 0; // Wait one frame.
+		Debug.Log ("After it waits a frame, it continues and keeps going with the function.");
+		// If you have to wait more frames, you have to add more yields.
+		yield return 0;
+		yield return 0; //yield return 1; or yield return null; would do the same thing as yield return 0;
+		yield return new WaitForSeconds(1f); // Wait for one second.
+		Debug.Log("I waited for one second!");
+	}*/
 }
