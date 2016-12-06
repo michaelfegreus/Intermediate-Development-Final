@@ -8,6 +8,7 @@ public class scr_player : MonoBehaviour {
 
 	public float baseMoveSpeed;
 	float currentMoveSpeed;
+	public float halfMoveSpeed;
 	public float turnSpeed;
 	public float throwSpeed;
 	public bool boomerangThrown;
@@ -61,6 +62,7 @@ public class scr_player : MonoBehaviour {
 		if (playerNumber == 2) {
 			gameObject.name = "Player2";
 		}
+	
 	}
 
 	void FixedUpdate () {
@@ -105,26 +107,38 @@ public class scr_player : MonoBehaviour {
 		//transform.Rotate (0f, inputX * turnSpeed, 0f);
 
 		if (Input.GetKey (myMoveUp)) {
-			rb.AddForce(transform.position += Vector3.forward * Time.deltaTime * currentMoveSpeed);
+			rb.velocity = new Vector3 (0f, 0f, currentMoveSpeed);
+
+			//rb.AddForce(transform.position += Vector3.forward * Time.deltaTime * currentMoveSpeed);
 		}
 
 		if (Input.GetKey (myMoveDown)) {
-			rb.AddForce(transform.position += Vector3.back * Time.deltaTime * currentMoveSpeed);
+
+			rb.velocity = new Vector3 (0f, 0f, -currentMoveSpeed);
+
+			//rb.AddForce(transform.position += Vector3.back * Time.deltaTime * currentMoveSpeed);
 
 			//transform.position += Vector3.back * Time.deltaTime * currentMoveSpeed;
 		}
 
 		if (Input.GetKey (myMoveLeft)) {
-			rb.AddForce(transform.position += Vector3.left * Time.deltaTime * currentMoveSpeed);
+
+			rb.velocity = new Vector3 (-currentMoveSpeed, 0f, 0f);
+
+			//rb.AddForce(transform.position += Vector3.left * Time.deltaTime * currentMoveSpeed);
 
 			//transform.position += Vector3.left * Time.deltaTime * currentMoveSpeed;
 		}
 
 		if (Input.GetKey (myMoveRight)) {
-			rb.AddForce(transform.position += Vector3.right * Time.deltaTime * currentMoveSpeed);
+
+			rb.velocity = new Vector3 (currentMoveSpeed, 0f, 0f);
+
+			//rb.AddForce(transform.position += Vector3.right * Time.deltaTime * currentMoveSpeed);
 
 			//transform.position += Vector3.right * Time.deltaTime * currentMoveSpeed;
 		}
+			
 
 
 		//throws the boomerang to the right - currently only goes forward
@@ -199,41 +213,65 @@ public class scr_player : MonoBehaviour {
 		} else {
 			facingSouthWest = false;
 		}
+			
 
 		//changing the direction the player is facing
 
 		if (facingNorth == true) {
 			//transform.rotation = Quaternion.Euler (new Vector3 (0, 0, 0));
 			transform.eulerAngles = new Vector3 (0, 0);
+			//currentMoveSpeed = baseMoveSpeed;
 		}
 
 		if (facingEast == true) {
 			transform.eulerAngles = new Vector3 (0, 90);
+			//currentMoveSpeed = baseMoveSpeed;
 		}
 
 		if (facingSouth == true) {
 			transform.eulerAngles = new Vector3 (0, 180);
+			//currentMoveSpeed = baseMoveSpeed;
 		}
 
 		if (facingWest == true) {
 			transform.eulerAngles = new Vector3 (0, 270);
+			//currentMoveSpeed = baseMoveSpeed;
 		}
 
 		if (facingNorthEast == true) {
+			rb.velocity = new Vector3 (currentMoveSpeed, 0f, currentMoveSpeed);
+
 			transform.eulerAngles = new Vector3 (0, 45);
+			//currentMoveSpeed = currentMoveSpeed /2f;
+			//currentMoveSpeed = halfMoveSpeed;
 		}
 
 		if (facingNorthWest == true) {
+			rb.velocity = new Vector3 (-(currentMoveSpeed), 0f, currentMoveSpeed);
+
 			transform.eulerAngles = new Vector3 (0, 315);
+			//currentMoveSpeed = currentMoveSpeed / 2f;
+			//currentMoveSpeed = halfMoveSpeed;
 		}
 
 		if (facingSouthEast == true) {
+			rb.velocity = new Vector3 (currentMoveSpeed, 0f, -(currentMoveSpeed));
+
 			transform.eulerAngles = new Vector3 (0, 135);
+			//currentMoveSpeed = currentMoveSpeed / 2f;
+			//currentMoveSpeed = halfMoveSpeed;
 		}
 
 		if (facingSouthWest == true) {
+			rb.velocity = new Vector3 (-(currentMoveSpeed), 0f, -(currentMoveSpeed));
+
 			transform.eulerAngles = new Vector3 (0, 225);
+			//currentMoveSpeed = currentMoveSpeed / 2f;
+			//currentMoveSpeed = halfMoveSpeed;
 		}
+
+
+		 
 
 	}
 }
